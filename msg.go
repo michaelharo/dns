@@ -80,7 +80,7 @@ var (
 // For instance, to make it return a static value:
 //
 //	dns.Id = func() uint16 { return 3 }
-var Id func() uint16 = id
+var Id = id
 
 // MsgHdr is a a manually-unpacked version of (id, bits).
 type MsgHdr struct {

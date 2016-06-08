@@ -548,7 +548,7 @@ func TestHandlerCloseTCP(t *testing.T) {
 				return
 			}
 			time.Sleep(time.Second / 10)
-			tries += 1
+			tries++
 			goto exchange
 		}
 	}()
