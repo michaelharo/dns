@@ -916,11 +916,11 @@ func setLOC(h RR_Header, c chan lex, o, f string) (RR, *ParseError, string) {
 
 	<-c // zBlank
 	l = <-c
-	i, e = strconv.ParseFloat(l.token, 32)
-	if e != nil || l.err {
+	if i, e := strconv.ParseFloat(l.token, 32); e != nil || l.err {
 		return nil, &ParseError{f, "bad LOC Latitude seconds", l}, ""
+	} else {
+		rr.Latitude += uint32(1000 * i)
 	}
-	rr.Latitude += uint32(1000 * i)
 	<-c // zBlank
 	// Either number, 'N' or 'S'
 	l = <-c
@@ -934,29 +934,29 @@ East:
 	// East
 	<-c // zBlank
 	l = <-c
-	i, e = strconv.Atoi(l.token)
-	if e != nil || l.err {
+	if i, e := strconv.Atoi(l.token); e != nil || l.err {
 		return nil, &ParseError{f, "bad LOC Longitude", l}, ""
+	} else {
+		rr.Longitude = 1000 * 60 * 60 * uint32(i)
 	}
-	rr.Longitude = 1000 * 60 * 60 * uint32(i)
 	<-c // zBlank
 	// Either number, 'E' or 'W'
 	l = <-c
 	if rr.Longitude, ok = locCheckEast(l.token, rr.Longitude); ok {
 		goto Altitude
 	}
-	i, e = strconv.Atoi(l.token)
-	if e != nil || l.err {
+	if i, e := strconv.Atoi(l.token); e != nil || l.err {
 		return nil, &ParseError{f, "bad LOC Longitude minutes", l}, ""
+	} else {
+		rr.Longitude += 1000 * 60 * uint32(i)
 	}
-	rr.Longitude += 1000 * 60 * uint32(i)
 	<-c // zBlank
 	l = <-c
-	i, e = strconv.ParseFloat(l.token, 32)
-	if e != nil || l.err {
+	if i, e := strconv.ParseFloat(l.token, 32); e != nil || l.err {
 		return nil, &ParseError{f, "bad LOC Longitude seconds", l}, ""
+	} else {
+		rr.Longitude += uint32(1000 * i)
 	}
-	rr.Longitude += uint32(1000 * i)
 	<-c // zBlank
 	// Either number, 'E' or 'W'
 	l = <-c
